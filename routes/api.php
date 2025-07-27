@@ -9,7 +9,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/cars',[CarController::class,'index'])->middleware('auth:sanctum');
+Route::get('/cars',[CarController::class,'index']);
 Route::get('/cars/{id}',[CarController::class,'show'])->middleware('auth:sanctum');;
 Route::post('/cars',[CarController::class,'store'])->middleware('auth:sanctum');
 Route::put('/cars/{id}',[CarController::class,'update'])->middleware('auth:sanctum');

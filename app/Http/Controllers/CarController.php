@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Validator;
+use PhpParser\Node\Stmt\TryCatch;
+ use Illuminate\Database\QueryException ;
 
 class CarController extends Controller
 {
@@ -19,7 +21,8 @@ class CarController extends Controller
      */
     public function index()
     {
-        $data=Car::all();
+      try{
+          $data=Car::findorfail(8);
         return response()->
         json([
             'status'=>HttpResponse::HTTP_OK,
@@ -27,6 +30,28 @@ class CarController extends Controller
             'data'=>$data
 
         ],HttpResponse::HTTP_OK);
+      }catch(\BadMethodCallException $e){
+        print_r(get_class($e));
+          return response()->
+        json([
+            'status'=>false,
+            'message'=>$e->getMessage()
+            ],HttpResponse::HTTP_BAD_REQUEST);
+      }catch(QueryException $e){
+        print_r(get_class($e));
+          return response()->
+        json([
+            'status'=>false,
+            'message'=>$e->getMessage()
+            ],HttpResponse::HTTP_BAD_REQUEST);
+      }catch(\Exception $e){
+        print_r(get_class($e));
+          return response()->
+        json([
+            'status'=>false,
+            'message'=>$e->getMessage()
+            ],HttpResponse::HTTP_BAD_REQUEST);
+      }
     }
 
     /**
@@ -34,6 +59,7 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
+        try{
     
     $validaedata= Validator::make($request->all(),[
                  'chassis_no'=>'required',
@@ -66,7 +92,14 @@ class CarController extends Controller
 
         ],HttpResponse::HTTP_CREATED); 
 
-       
+    }catch(\Exception $e){
+        print_r(get_class($e));
+          return response()->
+        json([
+            'status'=>false,
+            'message'=>$e->getMessage()
+            ],HttpResponse::HTTP_BAD_REQUEST);
+    }
     }
 
     /**
